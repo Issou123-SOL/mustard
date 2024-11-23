@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module" src="endless.js" defer></script>
+    <title>Mustard Token Claim</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f0ff 100%);
+            color: #1a365d;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 90%;
+            margin: 50px auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 
+                0 10px 20px rgba(43, 108, 176, 0.1),
+                0 6px 6px rgba(43, 108, 176, 0.1),
+                0 0 100px rgba(43, 108, 176, 0.1);
+            border: 1px solid rgba(43, 108, 176, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 35px;
+            color: #2b6cb0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #2b6cb0, #4299e1);
+            margin: 10px auto;
+            border-radius: 2px;
+        }
+
+        .wallet-connect {
+            background: linear-gradient(135deg, #2b6cb0 0%, #4299e1 100%);
+            color: white;
+            padding: 15px 28px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(43, 108, 176, 0.2);
+        }
+
+        .wallet-connect:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(43, 108, 176, 0.3);
+            background: linear-gradient(135deg, #245d9b 0%, #357abc 100%);
+        }
+
+        .claim-info {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(43, 108, 176, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(43, 108, 176, 0.1);
+        }
+
+        .claim-info p {
+            color: #4a5568;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .claim-amount {
+            font-size: 32px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #2b6cb0 0%, #4299e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 15px 0;
+        }
+
+        .claim-button {
+            background: linear-gradient(135deg, #2b6cb0 0%, #4299e1 100%);
+            color: white;
+            padding: 18px 35px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 20px;
+            width: 100%;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(43, 108, 176, 0.2);
+        }
+
+        .claim-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(43, 108, 176, 0.3);
+            background: linear-gradient(135deg, #245d9b 0%, #357abc 100%);
+        }
+
+        .status-message {
+            margin-top: 25px;
+            text-align: center;
+            color: #4a5568;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(43, 108, 176, 0.05);
+            font-size: 0.95em;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: rgba(43, 108, 176, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(43, 108, 176, 0.1);
+        }
+
+        .stats-box {
+            text-align: center;
+            padding: 10px 20px;
+        }
+
+        .stats-label {
+            color: #4a5568;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stats-value {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #2b6cb0 0%, #4299e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .animated-number {
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+                margin: 20px auto;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mustard Token Claim</h1>
+        
+        <div class="stats-container">
+            <div class="stats-box">
+                <div class="stats-label">Total Claims</div>
+                <div class="stats-value" id="claimCounter">0</div>
+            </div>
+        </div>
+
+        <div class="claim-info">
+            <p>Your Claimable Mustard Tokens:</p>
+            <div class="claim-amount">0 MUSTARD</div>
+        </div>
+
+        <button class=" claimButton claim-button" id="claimButton">
+            Connect Wallet
+        </button>
+
+        <div class="status-message" id="status">
+            Please connect your wallet to check your claimable tokens
+        </div>
+    </div>
+
+    <script>
+        // Counter animation function
+        function animateValue(element, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                element.innerHTML = Math.floor(progress * (end - start) + start).toLocaleString();
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Initialize counter
+        let currentCount = 681; // Starting from 681
+        const maxCount = 1000; // Maximum count
+        const counterElement = document.getElementById('claimCounter');
+        counterElement.innerHTML = currentCount.toLocaleString();
+
+        // Function to generate random increment
+        function getRandomIncrement() {
+            // Generate random number between 1 and 3 for more controlled growth
+            return Math.floor(Math.random() * 3) + 1;
+        }
+
+        // Function to update counter
+        function updateCounter() {
+            if (currentCount >= maxCount) {
+                // Stop the counter when it reaches 1000
+                currentCount = maxCount;
+                counterElement.innerHTML = currentCount.toLocaleString();
+                clearInterval(counterInterval); // Stop the interval
+                return;
+            }
+
+            const increment = getRandomIncrement();
+            // Make sure we don't exceed 1000
+            const newCount = Math.min(currentCount + increment, maxCount);
+            animateValue(counterElement, currentCount, newCount, 1000);
+            currentCount = newCount;
+        }
+
+        // Update counter periodically
+        const counterInterval = setInterval(updateCounter, 2000); // Updates every 2 seconds
+
+        // Existing click handlers
+        document.getElementById('claimButton').addEventListener('click', () => {
+            console.log('Connecting wallet...');
+        });
+    </script>
+</body>
+</html>
